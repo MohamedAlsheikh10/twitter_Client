@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "339376076088",
+    "firebase_url": "https://twetter-client.firebaseio.com",
+    "project_id": "twetter-client",
+    "storage_bucket": "twetter-client.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:339376076088:android:e74cc30d15e9ca09",
+        "android_client_info": {
+          "package_name": "com.itqanbs.twetter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "339376076088-r31bv3v8vec0tl99qtv6u5fs7us97k4s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBToVLvBuJJD8fD4AAIQVeA96YTxoALYWY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
