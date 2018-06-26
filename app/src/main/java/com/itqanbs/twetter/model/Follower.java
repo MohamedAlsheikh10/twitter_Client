@@ -9,6 +9,18 @@ public class Follower {
     @Expose
     private long id;
 
+    public String getProfile_background_color() {
+        return profile_background_color;
+    }
+
+    public void setProfile_background_color(String profile_background_color) {
+        this.profile_background_color = profile_background_color;
+    }
+
+    @SerializedName("profile_background_color")
+    @Expose
+    private String profile_background_color;
+
     @SerializedName("name")
     @Expose
     private String name;
@@ -16,6 +28,18 @@ public class Follower {
     @SerializedName("profile_image_url_https")
     @Expose
     private String profilePictureUrl;
+
+    public String getProfile_background_image_url() {
+        return profile_background_image_url;
+    }
+
+    public void setProfile_background_image_url(String profile_background_image_url) {
+        this.profile_background_image_url = profile_background_image_url;
+    }
+
+    @SerializedName("profile_background_image_url")
+    @Expose
+    private String profile_background_image_url;
 
     public String getDescription() {
         return description;

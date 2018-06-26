@@ -65,7 +65,11 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.Foll
             public void onClick(View v) {
                 Intent intent = new Intent(context, UserFollowerInfoActivity.class);
                 intent.putExtra("Name",FollowersAdapterAlbum.getName());
+                intent.putExtra("ScreenName",FollowersAdapterAlbum.getScreenName());
                 intent.putExtra("ProfilePictureUrl",FollowersAdapterAlbum.getProfilePictureUrl());
+                intent.putExtra("ID",FollowersAdapterAlbum.getId());
+                intent.putExtra("Profile_background_color",FollowersAdapterAlbum.getProfile_background_color());
+                intent.putExtra("Profile_background_image_url",FollowersAdapterAlbum.getProfile_background_image_url());
                 context.startActivity(intent);
             }
         });

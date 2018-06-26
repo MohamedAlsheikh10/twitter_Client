@@ -109,8 +109,8 @@ public class MainActivity extends AppCompatActivity
             finish();
 
         } else {
-            mStatusTextView.setText(R.string.signed_out);
-            mDetailTextView.setText(null);
+            binding.status.setText(R.string.signed_out);
+            binding.detail.setText(null);
             binding.buttonTwitterLogin.setVisibility(View.VISIBLE);
 
         }

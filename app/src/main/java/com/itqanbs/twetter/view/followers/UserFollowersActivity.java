@@ -121,5 +121,13 @@ public class UserFollowersActivity extends AppCompatActivity implements Follower
 
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (presenter.list!=null&&presenter.list.isExecuted()) {
+            presenter.cancel=true;
+            presenter.list.cancel();
+        }
+    }
 
 }

@@ -1,5 +1,6 @@
 package com.itqanbs.twetter.view.FollowerDetails;
 
+import com.itqanbs.twetter.model.Tweet;
 import com.itqanbs.twetter.model.Follower;
 
 import java.util.List;
@@ -18,13 +19,14 @@ public interface FollowersDetailsContract {
 
         public void activateReaload();
 
-        public void updateUI(List<Follower> followersList);
+        public void updateUI(List<com.twitter.sdk.android.core.models.Tweet> followersList);
 
 
     }
 
     public interface TaskPresenter {
-        public void loadTwitterFriends();
+        public void loadTwitterFriends(String name,Long ID);
+
 
         public List<Follower> fetchResults(Response response);
 
