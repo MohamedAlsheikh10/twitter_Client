@@ -2,10 +2,12 @@ package com.itqanbs.twetter.view.followers;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Toast;
 
@@ -52,6 +54,11 @@ public class UserFollowersActivity extends AppCompatActivity implements Follower
     @Override
     public void initViews() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_user_followers);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setTitle("Followers");
+
         binding.followerRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         GridLayoutManager mLayoutManager = new GridLayoutManager(this, 1);
         binding.followerRecyclerView.setLayoutManager(mLayoutManager);
@@ -80,6 +87,11 @@ public class UserFollowersActivity extends AppCompatActivity implements Follower
                 }
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 
     @Override

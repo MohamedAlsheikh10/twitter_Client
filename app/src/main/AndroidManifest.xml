@@ -17,6 +17,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".view.followers.UserFollowersActivity"></activity>
+        <activity android:name=".view.FollowerDetails.UserFollowerInfoActivity">
+
+        </activity>
     </application>
 
 </manifest>

@@ -1,6 +1,7 @@
 package com.itqanbs.twetter.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import com.google.gson.Gson;
 import com.itqanbs.twetter.MyApplication;
 import com.itqanbs.twetter.R;
 import com.itqanbs.twetter.model.Follower;
+import com.itqanbs.twetter.view.FollowerDetails.UserFollowerInfoActivity;
 
 import java.util.List;
 
@@ -61,7 +63,10 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.Foll
         holder.courseItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(context, UserFollowerInfoActivity.class);
+                intent.putExtra("Name",FollowersAdapterAlbum.getName());
+                intent.putExtra("ProfilePictureUrl",FollowersAdapterAlbum.getProfilePictureUrl());
+                context.startActivity(intent);
             }
         });
 
