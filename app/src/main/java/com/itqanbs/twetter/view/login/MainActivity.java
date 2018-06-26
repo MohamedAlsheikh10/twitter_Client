@@ -9,7 +9,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseUser;
-import com.itqanbs.twetter.Presenter.Presenter;
+import com.itqanbs.twetter.Presenter.LoginPresenter;
 import com.itqanbs.twetter.R;
 import com.itqanbs.twetter.databinding.ActivityMainBinding;
 import com.itqanbs.twetter.view.followers.UserFollowersActivity;
@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity
 // [END declare_auth]
 
     private TwitterLoginButton mLoginButton;
-    Presenter presenter;
+    LoginPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void InitPresenter( ) {
-        presenter = new Presenter();
+        presenter = new LoginPresenter();
         presenter.view = this;
         presenter.context = MainActivity.this;
     }

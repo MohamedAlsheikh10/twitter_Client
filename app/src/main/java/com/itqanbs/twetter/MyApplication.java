@@ -3,6 +3,8 @@ package com.itqanbs.twetter;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.multidex.MultiDex;
 import android.support.v7.app.AppCompatDelegate;
 
@@ -11,6 +13,10 @@ public class MyApplication extends Application {
 
     public static SharedPreferences FOLLOWERS_session;
     public static SharedPreferences.Editor FOLLOWERS_session_editor;
+    public static boolean isNetworkAvailable(Context activity) {
+        NetworkInfo activeNetworkInfo = ((ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
 
 
 

@@ -17,7 +17,7 @@ import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterConfig;
 import com.twitter.sdk.android.core.TwitterSession;
 
-public class Presenter implements MainActivityContract.TaskPresenter {
+public class LoginPresenter implements MainActivityContract.TaskPresenter {
     public MainActivityContract.TaskView view;
     public Context context;
     public FirebaseAuth mAuth;
