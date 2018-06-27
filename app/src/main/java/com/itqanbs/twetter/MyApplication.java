@@ -67,4 +67,5 @@ public class MyApplication extends Application {
         FOLLOWERS_session_editor = FOLLOWERS_session.edit();
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
+
 }

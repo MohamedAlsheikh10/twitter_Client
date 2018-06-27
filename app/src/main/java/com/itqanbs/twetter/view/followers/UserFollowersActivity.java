@@ -1,12 +1,21 @@
 package com.itqanbs.twetter.view.followers;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.databinding.DataBindingUtil;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,12 +33,14 @@ import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
 
 import java.util.List;
+import java.util.Locale;
 
-public class UserFollowersActivity extends AppCompatActivity implements FollowersContract.TaskView {
+public class UserFollowersActivity extends AppCompatActivity implements FollowersContract.TaskView, SwipeRefreshLayout.OnRefreshListener {
     public TwitterSession twittersession;
     FollowersPresenter presenter;
     ActivityUserFollowersBinding binding;
     FollowersAdapter followersAdapter;
+    SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,8 +67,10 @@ public class UserFollowersActivity extends AppCompatActivity implements Follower
         } else {
             if (presenter.loadFollowersForOfflineMode() != null && presenter.loadFollowersForOfflineMode().size() > 0) {
                 updateUI(presenter.loadFollowersForOfflineMode());
-            } else
-                onErroroccured("No Internet Connection");
+            } else {
+                onErroroccured(getResources().getString(R.string.NoInterntConnection));
+                ShowMessage(getResources().getString(R.string.NoInterntConnection));
+            }
         }
     }
 
@@ -78,12 +91,22 @@ public class UserFollowersActivity extends AppCompatActivity implements Follower
         binding = DataBindingUtil.setContentView(this, R.layout.activity_user_followers);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(getResources().getString(R.string.title_activity_user_followers));
         setSupportActionBar(toolbar);
-        toolbar.setTitle("Followers");
+        mSwipeRefreshLayout = findViewById(R.id.swiperefresh);
 
-        binding.followerRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        binding.followerRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+
+        int orientation = this.getResources().getConfiguration().orientation;
+        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+            binding.followerRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        } else {
+            binding.followerRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        }
+
+
         binding.followerRecyclerView.setItemAnimator(new DefaultItemAnimator());
         binding.followersResultText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,8 +114,8 @@ public class UserFollowersActivity extends AppCompatActivity implements Follower
                 if (MyApplication.isNetworkAvailable(UserFollowersActivity.this)) {
                     presenter.loadTwitterFriends();
                 } else {
-                    onErroroccured("No Internet Connection");
-                    ShowMessage("No Internet Connection");
+                    onErroroccured(getResources().getString(R.string.NoInterntConnection));
+                    ShowMessage(getResources().getString(R.string.NoInterntConnection));
                 }
             }
         });
@@ -103,12 +126,13 @@ public class UserFollowersActivity extends AppCompatActivity implements Follower
                 if (MyApplication.isNetworkAvailable(UserFollowersActivity.this)) {
                     presenter.loadTwitterFriends();
                 } else {
-                    onErroroccured("No Internet Connection");
-                    ShowMessage("No Internet Connection");
-
+                    onErroroccured(getResources().getString(R.string.NoInterntConnection));
+                    ShowMessage(getResources().getString(R.string.NoInterntConnection));
                 }
             }
         });
+
+
     }
 
     @Override
@@ -168,17 +192,85 @@ public class UserFollowersActivity extends AppCompatActivity implements Follower
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_logout) {
-            signOut();
+            showAlert();
+        }
+
+        if (id == R.id.action_arabic) {
+
+            MyApplication.FOLLOWERS_session_editor.putString("LANG", "ar");
+            MyApplication.FOLLOWERS_session_editor.commit();
+            changeLang("ar");
+        }
+        if (id == R.id.action_EN) {
+            MyApplication.FOLLOWERS_session_editor.putString("LANG", "en");
+            MyApplication.FOLLOWERS_session_editor.commit();
+            changeLang("en");
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    public void changeLang(String lang) {
+        if (lang.equalsIgnoreCase(""))
+            return;
+        Resources resources = getResources();
+        Configuration configuration = resources.getConfiguration();
+        DisplayMetrics displayMetrics = resources.getDisplayMetrics();
+        Locale myLocale = new Locale(lang);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            configuration.setLocale(myLocale);
+        } else {
+            configuration.locale = myLocale;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            getApplicationContext().createConfigurationContext(configuration);
+        } else {
+            resources.updateConfiguration(configuration, displayMetrics);
+        }
+        finish();
+        startActivity(getIntent());
+    }
+
     private void signOut() {
         LoginPresenter.mAuth.signOut();
         TwitterCore.getInstance().getSessionManager().clearActiveSession();
+        MyApplication.FOLLOWERS_session_editor.clear();
+        MyApplication.FOLLOWERS_session_editor.commit();
         Intent intent = new Intent(UserFollowersActivity.this, MainActivity.class);
         startActivity(intent);
         finish();
+    }
+
+
+
+    @Override
+    public void onRefresh() {
+        binding.followersProgress.setVisibility(View.VISIBLE);
+        followersAdapter.clear();
+        loadFollowers();
+        mSwipeRefreshLayout.setRefreshing(false);
+    }
+
+    void showAlert() {
+        AlertDialog.Builder builder;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+        } else {
+            builder = new AlertDialog.Builder(this);
+        }
+        builder.setTitle("LOGOUT")
+                .setMessage("Are you sure you want to LOGOUT?")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        signOut();
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
     }
 }

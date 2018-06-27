@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Twitter</string>
+    <string name="twitter_status_fmt">Twitter User: %s</string>
+    <string name="twitter_title_text">تسجيل الدخول تويتر </string>
+    <string name="firebase_status_fmt">Firebase User: %s</string>
+    <string name="firebase_user_management">Firebase User Management</string>
+    <string name="sign_in">تسجيل الدخول</string>
+    <string name="create_account">Create Account</string>
+
+    <string name="sign_out">تسجيل الخروج</string>
+    <string name="signed_out">تم تسجيل الخروج</string>
+    <string name="twitter_consumer_key">9Pm6ud5pjFaiBuboIKQITm83p</string>
+    <string name="twitter_consumer_secret">	ftQM6xMSXyscNOHWAt7SkyJl7ZKnz4YoYCRoUtENn7zNWj2YnY
+</string>
+
+    <string name="title_activity_user_followers">المتابعون</string>
+    <string name="NoInterntConnection">لا يتوفر الاتصال بالانترنت  </string>
+    <string name="action_logout">تسجيل الخروج</string>
+    <string name="action_ar"> اللغه العربية</string>
+    <string name="action_en"> اللغه الانجليزيه</string>
+
+</resources>

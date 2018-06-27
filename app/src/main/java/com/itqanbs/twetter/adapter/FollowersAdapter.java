@@ -18,6 +18,7 @@ import com.itqanbs.twetter.R;
 import com.itqanbs.twetter.model.Follower;
 import com.itqanbs.twetter.view.FollowerDetails.UserFollowerInfoActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -95,7 +96,12 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.Foll
         notifyItemInserted(FollowersAdapteralbumlist.size() - 1);
     }
 
-
+    public void clear() {
+        if(FollowersAdapteralbumlist!=null) {
+            FollowersAdapteralbumlist=new ArrayList<>();
+            notifyDataSetChanged();
+        }
+    }
 
 
     class FollowersAdapterViewHolder extends RecyclerView.ViewHolder {

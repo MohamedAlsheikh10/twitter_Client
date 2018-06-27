@@ -14,7 +14,8 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".view.followers.UserFollowersActivity">
+        tools:context=".view.followers.UserFollowersActivity"
+        >
 
         <ProgressBar
             android:id="@+id/followers_progress"
@@ -82,7 +83,10 @@
 
 
             </LinearLayout>
+
         </android.support.v4.widget.NestedScrollView>
+
     </android.support.constraint.ConstraintLayout>
 </android.support.v4.widget.NestedScrollView>
+
 </layout>

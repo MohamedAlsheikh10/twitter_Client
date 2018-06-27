@@ -1,14 +1,19 @@
 package com.itqanbs.twetter.view.login;
 
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.databinding.DataBindingUtil;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseUser;
+import com.itqanbs.twetter.MyApplication;
 import com.itqanbs.twetter.Presenter.LoginPresenter;
 import com.itqanbs.twetter.R;
 import com.itqanbs.twetter.databinding.ActivityMainBinding;
@@ -19,6 +24,8 @@ import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
+
+import java.util.Locale;
 
 
 public class MainActivity extends AppCompatActivity
@@ -43,9 +50,14 @@ public class MainActivity extends AppCompatActivity
 
         // Configure Twitter SDK
         presenter.ConfigureTwitterSDK();
-
+        if (MyApplication.FOLLOWERS_session.contains("LANG")) {
+            String language = MyApplication.FOLLOWERS_session.getString("LANG", "");
+            changeLang(language);
+        }
         // Inflate layout (must be done after Twitter is configured)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+
+
 
         binding.buttonTwitterSignout.setOnClickListener(this);
 
@@ -58,24 +70,43 @@ public class MainActivity extends AppCompatActivity
         binding.buttonTwitterLogin.setCallback(new Callback<TwitterSession>() {
             @Override
             public void success(Result<TwitterSession> result) {
-               ShowMessage("twitterLogin:success" );
-               presenter. handleTwitterSession(result.data);
+                ShowMessage("twitterLogin:success");
+                presenter.handleTwitterSession(result.data);
             }
 
             @Override
             public void failure(TwitterException exception) {
-                ShowMessage("twitterLogin:failure" );
+                ShowMessage("twitterLogin:failure");
                 updateUI(null);
             }
         });
 
     }
 
+    public void changeLang(String lang) {
+        if (lang.equalsIgnoreCase(""))
+            return;
+        Resources resources = getResources();
+        Configuration configuration = resources.getConfiguration();
+        DisplayMetrics displayMetrics = resources.getDisplayMetrics();
+        Locale myLocale = new Locale(lang);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
+            configuration.setLocale(myLocale);
+        } else{
+            configuration.locale=myLocale;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
+            getApplicationContext().createConfigurationContext(configuration);
+        } else {
+            resources.updateConfiguration(configuration,displayMetrics);
+        }
+    }
+
     // START on_start_check_user
     @Override
     public void onStart() {
         super.onStart();
-       presenter.OnStart();
+        presenter.OnStart();
 
     }
 
@@ -117,7 +148,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void InitPresenter( ) {
+    public void InitPresenter() {
         presenter = new LoginPresenter();
         presenter.view = this;
         presenter.context = MainActivity.this;
