@@ -8,9 +8,33 @@ import android.net.NetworkInfo;
 import android.support.multidex.MultiDex;
 import android.support.v7.app.AppCompatDelegate;
 
+import com.itqanbs.twetter.model.Follower;
+import com.twitter.sdk.android.core.models.Tweet;
+
+import java.util.List;
+
 public class MyApplication extends Application {
     public static boolean activityVisible;
 
+    public static List<Tweet> getTweetsList() {
+        return tweetsList;
+    }
+
+    public static void setTweetsList(List<Tweet> tweetsList) {
+        MyApplication.tweetsList = tweetsList;
+    }
+
+    private static List<Tweet> tweetsList;
+
+    public static List<Follower> getFollowersList() {
+        return followersList;
+    }
+
+    public static void setFollowersList(List<Follower> followersList) {
+        MyApplication.followersList = followersList;
+    }
+
+    private static List<Follower> followersList;
     public static SharedPreferences FOLLOWERS_session;
     public static SharedPreferences.Editor FOLLOWERS_session_editor;
     public static boolean isNetworkAvailable(Context activity) {

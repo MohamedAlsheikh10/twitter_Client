@@ -31,7 +31,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.Foll
     List<Follower> FollowersAdapteralbumlist;
 
 
-    Gson gson = new Gson();
+
 
 
     public FollowersAdapter(Context context, List<Follower> FollowersAdapteralbumlist) {
@@ -71,6 +71,8 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.Foll
                 intent.putExtra("Profile_background_color",FollowersAdapterAlbum.getProfile_background_color());
                 intent.putExtra("Profile_background_image_url",FollowersAdapterAlbum.getProfile_background_image_url());
                 context.startActivity(intent);
+              MyApplication.setFollowersList(null);
+
             }
         });
 
@@ -93,13 +95,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.Foll
         notifyItemInserted(FollowersAdapteralbumlist.size() - 1);
     }
 
-    private void addToFavoritList(FollowersAdapter coursemodel) {
 
-//        MyApplication.FOLLOWERS_session_editor.putString("FAVORITELIST", gson.toJson(favorite_course));
-//        MyApplication.FOLLOWERS_session_editor.putString("FAVORITELIST_ID", this.gson.toJson(favorite_course_id));
-        MyApplication.FOLLOWERS_session_editor.commit();
-
-    }
 
 
     class FollowersAdapterViewHolder extends RecyclerView.ViewHolder {

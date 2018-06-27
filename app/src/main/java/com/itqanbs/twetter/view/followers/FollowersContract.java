@@ -17,13 +17,13 @@ public interface FollowersContract {
         public void onErroroccured(String message);
 
         public void activateReaload();
-
         public void updateUI(List<Follower> followersList);
     }
 
     public interface TaskPresenter {
         public void loadTwitterFriends();
-
+        public void saveFollowersForOfflineMode( List<Follower> FollowersList);
+        public List<Follower>  loadFollowersForOfflineMode( );
         public List<Follower> fetchResults(Response response);
     }
 

@@ -4,7 +4,6 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -24,7 +23,7 @@ import com.twitter.sdk.android.tweetui.TweetView;
 import java.util.List;
 
 public class UserFollowerInfoActivity extends AppCompatActivity implements FollowersDetailsContract.TaskView {
-
+    ImageView bgImage;
     ProgressBar followersProgress;
     TextView followersResultText;
     ImageView followersReload;
@@ -38,12 +37,30 @@ public class UserFollowerInfoActivity extends AppCompatActivity implements Follo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_user_followersinfo);
+
         initViews();
         InitPresenter();
+
+        if (savedInstanceState != null) {
+            if (MyApplication.getTweetsList() != null && MyApplication.getTweetsList().size() > 0) {
+                updateUI(MyApplication.getTweetsList());
+            } else {
+                loadTweets();
+            }
+
+        } else {
+            loadTweets();
+        }
+    }
+
+    @Override
+    public void loadTweets() {
         if (MyApplication.isNetworkAvailable(this)) {
             presenter.loadTwitterFriends(getIntent().getStringExtra("ScreenName"), getIntent().getLongExtra("ID", 0));
         } else {
+            if (presenter.loadTweetsForOfflineMode(getIntent().getStringExtra("ScreenName")) != null && presenter.loadTweetsForOfflineMode(getIntent().getStringExtra("ScreenName")).size() > 0) {
+                updateUI(presenter.loadTweetsForOfflineMode(getIntent().getStringExtra("ScreenName")));
+            }else
             onErroroccured("No Internet Connection");
         }
     }
@@ -63,9 +80,9 @@ public class UserFollowerInfoActivity extends AppCompatActivity implements Follo
     @Override
     public void initViews() {
 
-
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_user_followersinfo);
         mainLayout = findViewById(R.id.main_layout);
-        ImageView bgImage = findViewById(R.id.background);
+        bgImage = findViewById(R.id.background);
         followersProgress = findViewById(R.id.followers_progress);
         followersResultText = findViewById(R.id.followers_result_text);
         followersReload = findViewById(R.id.followers_reload);
@@ -139,7 +156,7 @@ public class UserFollowerInfoActivity extends AppCompatActivity implements Follo
         followersProgress.setVisibility(View.INVISIBLE);
         followersResultText.setVisibility(View.INVISIBLE);
         followersReload.setVisibility(View.INVISIBLE);
-
+        MyApplication.setTweetsList(followersList);
 
         for (com.twitter.sdk.android.core.models.Tweet tweet : followersList) {
             final TweetView tweetView2 = new TweetView(this, tweet,
@@ -152,9 +169,15 @@ public class UserFollowerInfoActivity extends AppCompatActivity implements Follo
     @Override
     protected void onStop() {
         super.onStop();
-        if (presenter!=null&&presenter.listTweetCall.isExecuted()) {
-            presenter.cancel=true;
+        if (presenter != null && presenter.listTweetCall != null && presenter.listTweetCall.isExecuted()) {
+            presenter.cancel = true;
             presenter.listTweetCall.cancel();
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle saveState) {
+        super.onSaveInstanceState(saveState);
+
     }
 }

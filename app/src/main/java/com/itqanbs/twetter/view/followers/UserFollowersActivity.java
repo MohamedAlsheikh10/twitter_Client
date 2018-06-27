@@ -2,7 +2,6 @@ package com.itqanbs.twetter.view.followers;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -32,9 +31,28 @@ public class UserFollowersActivity extends AppCompatActivity implements Follower
         super.onCreate(savedInstanceState);
         initViews();
         InitPresenter();
+
+        if (savedInstanceState != null) {
+            if (MyApplication.getFollowersList() != null && MyApplication.getFollowersList().size() > 0) {
+                updateUI(MyApplication.getFollowersList());
+            } else {
+                loadFollowers();
+            }
+
+        } else {
+            loadFollowers();
+        }
+    }
+
+
+
+    private void loadFollowers() {
         if (MyApplication.isNetworkAvailable(this)) {
             presenter.loadTwitterFriends();
         } else {
+            if (presenter.loadFollowersForOfflineMode() != null && presenter.loadFollowersForOfflineMode().size() > 0) {
+                updateUI(presenter.loadFollowersForOfflineMode());
+            }else
             onErroroccured("No Internet Connection");
         }
     }
@@ -60,8 +78,8 @@ public class UserFollowersActivity extends AppCompatActivity implements Follower
         toolbar.setTitle("Followers");
 
         binding.followerRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        GridLayoutManager mLayoutManager = new GridLayoutManager(this, 1);
-        binding.followerRecyclerView.setLayoutManager(mLayoutManager);
+
+        binding.followerRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         binding.followerRecyclerView.setItemAnimator(new DefaultItemAnimator());
         binding.followersResultText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,15 +135,15 @@ public class UserFollowersActivity extends AppCompatActivity implements Follower
         binding.followersReload.setVisibility(View.INVISIBLE);
         followersAdapter = new FollowersAdapter(this, followersList);
         binding.followerRecyclerView.setAdapter(followersAdapter);
-
+        MyApplication.setFollowersList(followersList);
 
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        if (presenter.list!=null&&presenter.list.isExecuted()) {
-            presenter.cancel=true;
+        if (presenter.list != null && presenter.list.isExecuted()) {
+            presenter.cancel = true;
             presenter.list.cancel();
         }
     }
