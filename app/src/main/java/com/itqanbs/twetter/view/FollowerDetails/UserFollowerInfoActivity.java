@@ -1,6 +1,7 @@
 package com.itqanbs.twetter.view.FollowerDetails;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
@@ -10,6 +11,8 @@ import android.support.design.widget.AppBarLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -191,8 +194,15 @@ public class UserFollowerInfoActivity extends AppCompatActivity implements Follo
         }
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
         lp.copyFrom(policyTermsDialog.getWindow().getAttributes());
-        lp.width = width;
-        lp.height = height;
+        int orientation = this.getResources().getConfiguration().orientation;
+        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+            lp.width = width;
+            lp.height = height;
+        } else {
+            lp.width = width;
+            lp.height = height;
+        }
+
         policyTermsDialog.getWindow().setAttributes(lp);
     }
 
